@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security5"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Layout</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Thư viện Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Add some basic styling to make the layout more visually appealing */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Set minimum height to fill the viewport */
+            position: relative; /* Position relative for absolute positioning of footer */
+        }
+
+        .page-wrapper {
+            flex: 1; /* Occupy remaining vertical space */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            margin-bottom: 150px; /* Adjust margin bottom to create a larger space between content and footer */
+        }
+
+        .hero {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            background-image: url('/images/BG.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .hero button {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hero button:hover {
+            background-color: #0069d9;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .product-grid.product {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .product-grid.product img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .product-grid.product h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .product-grid.product p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        footer a {
+            color: #fff;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .social-icons a {
+            margin: 0 5px;
+        }
+
+        .subnav {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 20px;
+        }
+
+        .subnav.nav-link {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .subnav.nav-link:hover {
+            color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/products" th:href="@{/products}">
+                <img src="/images/logo.jpg" alt="Logo">
+                STORE6789
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+
+                    <li class="nav-item">
+                        <form id="categoryForm" action="/products/category" method="get" class="nav-link text-white">
+                            <div class="input-group mb-3">
+                                <select name="categoryId" class="form-select form-control bg-dark text-white" onchange="submitForm()">
+                                    <option value="1" class="text-dark">Loại sản phẩm</option>
+                                    <th:block th:each="category : ${categories}">
+                                        <option th:value="${category.id}" th:text="${category.name}"></option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </form>
+                    </li>
+                    <!-- Chỉ hiển thị khi có vai trò ADMIN -->
+
+                </ul>
+                <!-- Nút giỏ hàng -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-white active" aria-current="page" href="/orders/my-orders">My orders</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link text-white" href="/cart">
+                            <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Xin chào
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="dropdown-item" type="submit">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-outline-light" href="/login">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <nav class="subnav navbar navbar-expand-lg navbar-light bg-light " th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+        <div class="container-fluid">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                    <a th:href="@{/products/ql}" class="nav-link text-dark">Quản lý Products</a>
+                </li>
+                <li class="nav-item" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                    <a th:href="@{/orders}" class="nav-link text-dark">Quản lý Orders</a>
+                </li>
+                <li class="nav-item" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                    <a th:href="@{/categories}" class="nav-link text-dark">Quản lý Categories</a>
+                </li>
+                <li class="nav-item" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                    <a th:href="@{/user}" class="nav-link text-dark">Quản lý Users</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Hero section -->
+    <section class="hero">
+        <h1>Welcome to Web Bán Hàng</h1>
+        <p>Explore our collection of products</p>
+        <button class="btn btn-primary">Shop Now</button>
+    </section>
+
+    <!-- Content section -->
+    <div class="content container mt-5">
+        <section layout:fragment="content">
+            <!-- Nội dung cụ thể của từng trang sẽ được đặt tại đây -->
+        </section>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>&copy; 2024 Web Bán Hàng. All rights reserved.</p>
+        <p>
+            <a href="" class="text-white">About Us</a> |
+            <a href="" class="text-white">Contact Us</a> |
+            <a href="" class="text-white">Privacy Policy</a>
+        </p>
+        <div class="social-icons">
+            Follow us:
+            <a href="https://www.facebook.com" class="text-white ms-2">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.twitter.com" class="text-white ms-2">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://www.instagram.com" class="text-white ms-2">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+<script>
+    function submitForm() {
+        document.getElementById("categoryForm").submit();
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout1}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${title} ?: 'Place Order'">Place Order</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<section layout:fragment="content" class="container mt-3">
+  <h1>Place Your Order</h1>
+  <form id="orderForm" th:action="@{/api/payment/create_payment}" method="get">
+    <div class="mb-3">
+      <label for="customerName" class="form-label">Your Name:</label>
+      <!-- Display username from the User object -->
+      <input type="text" id="customerName" name="customerName" class="form-control" th:value="${user.username}" required>
+    </div>
+    <div class="mb-3">
+      <label for="Diachi" class="form-label">Địa chỉ:</label>
+      <input type="text" id="Diachi" name="Diachi" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="SDT" class="form-label">Số điện thoại:</label>
+      <input type="text" id="SDT" name="SDT" class="form-control" th:value="${user.phone}" required>
+    </div>
+    <div class="mb-3">
+      <label for="Email" class="form-label">Email:</label>
+      <input type="text" id="Email" name="Email" class="form-control" th:value="${user.email}" required>
+    </div>
+    <div class="mb-3">
+      <label for="Ghichu" class="form-label">Ghi chú:</label>
+      <input type="text" id="Ghichu" name="Ghichu" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="PTTT" class="form-label">Phương thức thanh toán:</label>
+      <select id="PTTT" name="PTTT" class="form-select" required>
+        <option value="vnpay">VNPAY</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Order</button>
+  </form>
+
+  <script>
+    document.getElementById('orderForm').addEventListener('submit', function(event) {
+        // Get the selected payment method
+        const paymentMethod = document.getElementById('PTTT').value;
+
+        if (paymentMethod === 'vnpay') {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Get the form data
+            const formData = new FormData(event.target);
+
+            // Convert the form data to a query string
+            const queryString = new URLSearchParams(formData).toString();
+
+            // Redirect to the VNPAY payment URL with the form data
+            window.location.href = '/api/payment/create_payment?' + queryString;
+        }
+        // For 'cash_on_delivery' method, submit the form normally
+    });
+  </script>
+</section>
+</body>
+</html>

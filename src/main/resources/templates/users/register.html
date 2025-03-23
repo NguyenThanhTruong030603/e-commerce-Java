@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout1}">
+<head>
+    <title>Register</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .btn-google {
+            color: #fff;
+            background-color: #4285F4;
+            border-color: #4285F4;
+        }
+        .btn-google:hover {
+            background-color: #357AE8;
+            border-color: #357AE8;
+        }
+        .btn-google svg {
+            margin-right: 10px; /* Adds space between icon and text */
+        }
+
+        .btn-facebook {
+            color: #fff;
+            background-color: #3b5998;
+            border-color: #3b5998;
+        }
+        .btn-facebook:hover {
+            background-color: #2d4373;
+            border-color: #2d4373;
+        }
+        .btn-facebook svg {
+            margin-right: 10px; /* Adds space between icon and text */
+        }
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+    <h1 class="mb-4">Register</h1>
+    <form th:action="@{/register}" method="post">
+        <div th:if="${errors}" class="alert alert-danger justify-content-center"
+             role="alert">
+            <ul>
+                <li th:each="error : ${errors}" th:text="${error}" class="text-danger text-start"></li>
+            </ul>
+        </div>
+        <div class="form-group mb-4">
+            <label for="email"></label>
+            <input type="email" class="form-control" id="email" name="email"
+                   placeholder="Enter your email">
+        </div>
+        <div class="form-group mb-4">
+            <label for="username"></label>
+            <input type="text" class="form-control" id="username" name="username"
+                   placeholder="Enter your username">
+        </div>
+        <div class="form-group mb-4">
+            <label for="password"></label>
+            <input type="password" class="form-control" id="password"
+                   name="password" placeholder="Enter your password">
+        </div>
+        <div class="form-group mb-4">
+            <label for="phone"></label>
+            <input type="tel" class="form-control" id="phone" name="phone"
+                   placeholder="Enter your phone">
+        </div>
+        <div class="d-grid gap-2 form-action">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Sign up</button>
+            <p class="mt-3 mb-0">Already have an account? <a class="text-info text-center" th:href="${'/login'}">Login?</a></p>
+        </div>
+        <div class="mb-4">
+            <!-- Nút đăng nhập bằng Google -->
+            <a href="/oauth2/authorization/google" class="btn btn-lg btn-block btn-google">
+                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+                    <path fill="#FFF" d="M403.2 208H256v96h140.8c-6.4 38.4-25.6 70.4-57.6 92.8l88 68.8c51.2-48 81.6-115.2 81.6-188.8c0-12.8-1.6-25.6-3.2-38.4z"/>
+                    <path fill="#FFF" d="M244.8 403.2c-51.2-28.8-89.6-76.8-102.4-134.4H64c19.2 57.6 57.6 102.4 108.8 128l88-68.8z"/>
+                    <path fill="#FFF" d="M136 256c0-14.4 3.2-28.8 6.4-41.6l-88-68.8C36.8 166.4 0 208 0 256s36.8 89.6 96 109.6l88-68.8c-3.2-12.8-6.4-25.6-6.4-41.6z"/>
+                    <path fill="#FFF" d="M244.8 108.8c57.6 28.8 96 83.2 108.8 147.2l87.2-68.8c-51.2-64-140.8-102.4-236.8-102.4c-38.4 0-74.4 9.6-108.8 25.6l88 68.8c12.8-38.4 38.4-70.4 61.6-96z"/>
+                </svg>
+                 Google
+            </a>
+        </div>
+        <div class="mb-4">
+            <!-- Nút đăng nhập bằng Facebook -->
+            <a href="/oauth2/authorization/facebook" class="btn btn-lg btn-block btn-facebook">
+                <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="#FFF">
+                    <path d="M416 32H32A32 32 0 0 0 0 64v384a32 32 0 0 0 32 32h192V336h-64v-80h64v-61c0-30.4 17.9-47.4 46.2-47.4h34.8v76h-24.2c-8.8 0-16.8 5.5-16.8 14.2v54.2h40.7c4.9 0 9.5-1.7 13.2-4.8 3.6-3.1 5.7-7.6 5.7-12.4v-63.2h32l-5.3 80h-26.7V480h52.4a32 32 0 0 0 32-32V64a32 32 0 0 0-32-32z"/>
+                </svg>
+                <span>Facebook</span>
+            </a>
+        </div>
+    </form>
+</section>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+</script>
+</body>
+</html>

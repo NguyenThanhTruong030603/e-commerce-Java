@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout2}" >
+<head>
+    <title>Order Details</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-5">
+<h1>Order Details</h1>
+
+
+
+<div>
+    <h2>Order Items</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over each order detail -->
+        <tr th:each="detail : ${orderDetails}">
+            <td th:text="${detail.product.name}"></td>
+            <td th:text="${detail.quantity}"></td>
+            <td th:text="${#numbers.formatDecimal(detail.product.price, 1, 2)}"></td>
+            <td th:text="${#numbers.formatDecimal(detail.product.price * detail.quantity, 1, 2)}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</section>
+</body>
+</html>
